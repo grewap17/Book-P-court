@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Pickle Court Booker</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+	<main class="container">
+		<h1>Book a Pickleball Court</h1>
+		{% if errors %}
+			<article class="contrast">
+				<ul>
+					{% for e in errors %}
+						<li>{{ e }}</li>
+					{% endfor %}
+				</ul>
+			</article>
+		{% endif %}
+
+		<form method="post" action="{{ url_for('book') }}">
+			<div class="grid">
+				<label>
+					Day
+					<select name="day" required>
+						{% set selected_day = (form.day if form else '') %}
+						{% for d in ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'] %}
+							<option value="{{ d }}" {% if selected_day==d %}selected{% endif %}>{{ d }}</option>
+						{% endfor %}
+					</select>
+				</label>
+				<label>
+					Court Number
+					<input type="number" name="court_number" min="1" max="20" placeholder="e.g., 9" value="{{ (form.court_number if form else '') }}" required />
+				</label>
+			</div>
+
+			<label>
+				Time (as shown on site)
+				<input type="text" name="time" placeholder="e.g., 07:30 pm" value="{{ (form.time if form else '') }}" required />
+			</label>
+
+			<div class="grid">
+				<label>
+					Email
+					<input type="email" name="email" placeholder="you@example.com" value="{{ (form.email if form else '') }}" required />
+				</label>
+				<label>
+					Password
+					<input type="password" name="password" required />
+				</label>
+			</div>
+
+			<label>
+				<input type="checkbox" name="headless" checked />
+				Run headless (no browser window)
+			</label>
+
+			<button type="submit">Book Now</button>
+		</form>
+	</main>
+</body>
+</html> 
