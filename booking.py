@@ -1,3 +1,5 @@
+import os
+import shutil
 import time
 from typing import Optional
 from selenium import webdriver
@@ -40,8 +42,19 @@ def book_court(day: str, court_name: str, time_str: str, email: str, password: s
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-setuid-sandbox")
 
-        service = ChromeService(ChromeDriverManager().install())
+        chrome_binary = os.environ.get("CHROME_BIN")
+        if chrome_binary:
+            chrome_options.binary_location = chrome_binary
+
+        chromedriver_path = (
+            os.environ.get("CHROMEDRIVER")
+            or shutil.which("chromedriver")
+            or ChromeDriverManager().install()
+        )
+        service = ChromeService(chromedriver_path)
         driver = webdriver.Chrome(service=service, options=chrome_options)
         wait = WebDriverWait(driver, 20)
 
